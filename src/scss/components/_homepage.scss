@@ -1,1 +1,18 @@
 @use './variables' as v;
+
+.homepage {
+    padding: 2em 4em;
+    h2 {
+        font-size: 1.25rem;
+    }
+    .project-body {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        .task-adder {
+            display: flex;
+            gap: 8px;
+            cursor: pointer;
+        }
+    }
+}
