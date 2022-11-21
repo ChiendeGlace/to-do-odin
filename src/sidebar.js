@@ -1,3 +1,5 @@
+import { makeHomepage } from "./homepage";
+
 const sidebar = document.createElement('div');
 sidebar.classList.add('sidebar');
 
@@ -50,3 +52,17 @@ export const makeSidebar = () => {
     sidebar.append(sidebarDefault, sidebarProjects);
     return sidebar;
 }
+
+const headerI = document.querySelector('#header-i');
+const section = document.querySelector('section');
+const changeStatus = (e) => {
+    if (section.childElementCount == 2) {
+        section.textContent = '';
+        section.appendChild(makeHomepage());
+    } else {
+        section.textContent = '';
+        section.appendChild(makeSidebar());
+        section.appendChild(makeHomepage());
+    }
+};
+headerI.addEventListener('click', changeStatus);
