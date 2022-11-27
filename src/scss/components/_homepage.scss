@@ -3,16 +3,58 @@
 .homepage {
     padding: 2em 4em;
     h2 {
-        font-size: 1.25rem;
+        font-size: 1.75rem;
     }
     .project-body {
         display: flex;
         flex-direction: column;
         gap: 16px;
+        .project-tasks {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            .task-box {
+                .task-text {
+                    width: 80%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    .task-title {
+                        font-size: 1.125rem;
+                    }
+                    input {
+                        width: 500px;
+                    }   
+                }
+                align-items: center;
+                border: 1px solid black;
+                padding: 1em;
+                display: flex;
+                justify-content: space-between;
+                gap: 8px;
+                .task-info {
+                    display: flex;
+                    gap: 16px;
+                }
+            }
+        }
         .task-adder {
             display: flex;
             gap: 8px;
             cursor: pointer;
         }
+    }
+}
+
+.task-form {
+    padding: 1em;
+    border: 1px solid black;
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    width: 500px;
+    div {
+        display: flex;
+        gap: 16px;
     }
 }

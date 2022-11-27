@@ -13,7 +13,9 @@
             align-items: center;
             justify-content: flex-start;
             gap: 8px;
-            cursor: pointer;
+            p {
+                cursor: pointer;
+            }
         }
     }
     .sidebar-projects {
@@ -29,6 +31,11 @@
             justify-content: flex-start;
             gap: 8px;
             cursor: pointer;
+        }
+        .sidebar-project-box {
+            display: flex;
+            gap: 8px;
+            align-items: center;
         }
     }
 }
