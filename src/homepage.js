@@ -27,7 +27,7 @@ projectTitleDiv.appendChild(projectTitle);
 export const projectTasks = document.createElement('div');
 projectTasks.classList.add('project-tasks');
 
-const renderTasks = (project) => {
+const renderTasks = (project, projectName) => {
     if (!project == []) {
         for (let i = 0; i < project.length; i++) {
             const taskBox = document.createElement('div');
@@ -44,8 +44,16 @@ const renderTasks = (project) => {
             taskDate.textContent = project[i].date;
             const taskInfo = document.createElement('div');
             const taskText = document.createElement('div');
-            taskText.classList.add('task-text')
-            taskText.append(taskTitle, taskDescription);
+            taskText.classList.add('task-text');
+            const taskTitleHolder = document.createElement('div');
+            taskTitleHolder.appendChild(taskTitle);
+            taskTitleHolder.classList.add('task-title-holder');
+            if (projectName == 'Inbox') {
+                const whereFrom = document.createElement('p');
+                whereFrom.textContent = `(Project: ${project[i].whereFrom})`;
+                taskTitleHolder.appendChild(whereFrom);
+            }
+            taskText.append(taskTitleHolder, taskDescription);
             taskInfo.classList.add('task-info');
             taskInfo.append(taskDate,taskIcon);
             taskBox.append(taskText, taskInfo);
@@ -71,6 +79,19 @@ const renderProject = (projectName) => {
     currentProject = projectName;
     const project = JSON.parse(localStorage.getItem(projectName));
     projectBody.append(projectTitleDiv, projectTasks, taskAdder);
+    if (projectName == 'Inbox') {
+        projectBody.removeChild(taskAdder);
+        let project = JSON.parse(localStorage.getItem('Inbox'));
+        project = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            if (localStorage.key(i) != 'Sidebar' && localStorage.key(i) != 'Inbox') {
+                const projectTasks = JSON.parse(localStorage.getItem(localStorage.key(i)));
+                projectTasks.forEach(projectTask => projectTask.whereFrom = localStorage.key(i));
+                project = project.concat(...projectTasks);
+            } 
+            localStorage.setItem('Inbox', JSON.stringify(project));
+        }
+    }
     projectTitle.textContent = projectName;
     if (projectName == 'Inbox' || projectName == 'Today' || projectName == 'This week') {
         projectTitle.removeEventListener('click', changeTitle);
@@ -78,7 +99,7 @@ const renderProject = (projectName) => {
         projectTitle.addEventListener('click', changeTitle);
     }
     taskAdder.addEventListener('click', makeTaskForm);
-    renderTasks(project);
+    renderTasks(project, projectName);
     return projectBody;
 };
 

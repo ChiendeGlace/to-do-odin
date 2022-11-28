@@ -1,5 +1,5 @@
-import { currentProject, makeHomepage, projectTitle, renderProject, projectTasks } from "./homepage";
-import { makeProjectForm, renderSidebarProjects } from "./projectFunctions";
+import { currentProject, makeHomepage, projectTasks } from "./homepage";
+import { renderSidebarProjects } from "./projectFunctions";
 
 const sidebar = document.createElement('div');
 sidebar.classList.add('sidebar');
@@ -63,6 +63,7 @@ export const makeSidebar = () => {
 
 const headerI = document.querySelector('#header-i');
 const section = document.querySelector('section');
+
 const changeStatus = (e) => {
     if (section.childElementCount == 2) {
         section.textContent = '';
@@ -77,4 +78,5 @@ const changeStatus = (e) => {
         section.classList.remove('homepage-only');
     }
 };
+
 headerI.addEventListener('click', changeStatus);

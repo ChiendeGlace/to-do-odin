@@ -8,6 +8,8 @@ export const changeProject = (e) => {
     section.textContent = '';
     section.appendChild(makeSidebar());
     section.appendChild(makeHomepage(projectName));
+    sidebarCreatedProjects.textContent = '';
+    renderSidebarProjects();
 }
 
 
@@ -45,6 +47,41 @@ export const makeProjectForm = (e) => {
     sidebarForm.appendChild(createProjectForm());
 }
 
+const warning = document.createElement('div');
+const warningMessage = document.createElement('p');
+warningMessage.textContent = 'Are you sure you want to delete the project?';
+const projectCancelButton = document.createElement('button');
+projectCancelButton.textContent = 'No';
+const acceptButton = document.createElement('button');
+acceptButton.textContent = 'Yes';
+const buttonDiv = document.createElement('div');
+buttonDiv.append(acceptButton, projectCancelButton);
+warning.append(warningMessage, buttonDiv);
+
+const makeProjectWarning = (projectBox, projectIcon, projectTitle, projectMenu) => {
+    projectBox.textContent = '';
+    projectBox.appendChild(warning);
+}
+
+const hideWarning = (e) => {
+    sidebarCreatedProjects.textContent = '';
+    renderSidebarProjects();
+};
+
+const deleteProject = (projectName) => {
+    let arrayIndex;
+    const sidebarProjects = JSON.parse(localStorage.getItem('Sidebar')) || [];
+    for (let i = 0; i < sidebarProjects.length; i++) {
+        if (sidebarProjects[i] == projectName) {
+            arrayIndex = i;
+        }
+    }
+    sidebarProjects.splice(arrayIndex, 1);
+    localStorage.setItem('Sidebar', JSON.stringify(sidebarProjects));
+    localStorage.removeItem(`${projectName}`);
+    sidebarCreatedProjects.textContent = '';
+    renderSidebarProjects();
+};
 
 export const renderSidebarProjects = () => {
     const sidebarProjects = JSON.parse(localStorage.getItem('Sidebar')) || [];
@@ -63,6 +100,8 @@ export const renderSidebarProjects = () => {
             sidebarProjectBox.append(sidebarProjectIcon, sidebarProjectTitle, sidebarProjectMenu);
             sidebarCreatedProjects.appendChild(sidebarProjectBox);
             sidebarProjectTitle.addEventListener('click', changeProject);
+            sidebarProjectMenu.addEventListener('click', () => makeProjectWarning(sidebarProjectBox, sidebarProjectIcon, sidebarProjectTitle, sidebarProjectMenu));
+            acceptButton.addEventListener('click', () => deleteProject(sidebarProjectTitle.textContent));
         }
     }
 }
@@ -119,4 +158,5 @@ export const changeTitle = (e) => {
 
 sidebarProjectsAdder.addEventListener('click', makeProjectForm);
 cancelButton.addEventListener('click', hideForm);
-projectForm.addEventListener('submit', appendProject);
+projectForm.addEventListener('submit', appendProject); 
+projectCancelButton.addEventListener('click', hideWarning);

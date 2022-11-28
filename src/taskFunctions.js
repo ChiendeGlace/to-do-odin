@@ -1,5 +1,5 @@
 import { section } from "./index";
-import { currentProject, projectBody, hideForm, projectTasks, renderTasks, makeHomepage, taskAdder } from "./homepage";
+import { currentProject, projectBody, hideForm, projectTasks, makeHomepage } from "./homepage";
 import { makeSidebar } from "./sidebar";
 
 export const taskForm = document.createElement('form');
