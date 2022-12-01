@@ -1,9 +1,12 @@
+@use './variables' as v;
+
 .sidebar {
     padding: 2em 4em;
     display: flex;
     flex-direction: column;
     gap: 32px;
-    background-color: lightgray;
+    background-color: #bae6fd;
+    box-shadow: 3px 3px 1px 1px rgba(0,0,0,0.25);
     .sidebar-default {
         display: flex;
         flex-direction: column;
@@ -24,6 +27,7 @@
         gap: 16px;
         h2 {
             font-size: 1.25rem;
+            font-family: v.$fontPrimary;
         }
         .sidebar-projects-adder {
             display: flex;
@@ -34,8 +38,32 @@
         }
         .sidebar-project-box {
             display: flex;
-            gap: 8px;
+            gap: 16px;
             align-items: center;
         }
+    }
+}
+.project-form {
+    background-color: white;
+    padding: 1em;
+    border-radius: 5px;
+    display: flex;
+    gap: 8px;
+    width: 200px;
+    flex-direction: column;
+    div {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+}
+
+
+@media screen and (max-width: 1000px) {
+    .sidebar {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        box-shadow: 0px 3px 1px 1px rgba(0,0,0,0.25);
     }
 }

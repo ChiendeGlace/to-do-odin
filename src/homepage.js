@@ -1,5 +1,5 @@
 import { createProject, changeTitle } from "./projectFunctions";
-import { makeTaskForm, cancelButton, deleteTask, editTaskDate, editTaskTitle, editTaskDescription, taskForm } from "./taskFunctions";
+import { makeTaskForm, cancelButton, deleteTask, editTaskDate, editTaskTitle, editTaskDescription, taskForm} from "./taskFunctions";
 
 export let currentProject; 
 
@@ -40,34 +40,67 @@ const renderTasks = (project, projectName) => {
             const taskDescription = document.createElement('p');
             const taskDate = document.createElement('p');
             taskTitle.textContent = project[i].title;
+            taskTitle.style.cursor = 'pointer';
             taskDescription.textContent = project[i].description;
+            taskDescription.style.cursor = 'pointer';
             taskDate.textContent = project[i].date;
+            taskDate.style.cursor = 'pointer';
             const taskInfo = document.createElement('div');
             const taskText = document.createElement('div');
             taskText.classList.add('task-text');
             const taskTitleHolder = document.createElement('div');
             taskTitleHolder.appendChild(taskTitle);
             taskTitleHolder.classList.add('task-title-holder');
+            const taskFunctionals = document.createElement('div');
+            taskFunctionals.classList.add('task-functionals')
+            const taskPriority = document.createElement('i');
+            taskPriority.classList.add('fa-regular');
+            taskPriority.classList.add('fa-star');
+            taskPriority.style.cursor = 'pointer';
+            const taskCheckOff = document.createElement('i');
+            taskCheckOff.classList.add('fa-regular');
+            taskCheckOff.classList.add('fa-circle-check');
+            taskCheckOff.style.cursor = 'pointer';
+            taskFunctionals.append(taskPriority, taskCheckOff);
             if (projectName == 'Inbox') {
                 const whereFrom = document.createElement('p');
-                whereFrom.textContent = `(Project: ${project[i].whereFrom})`;
+                whereFrom.textContent = `(From: ${project[i].whereFrom})`;
                 taskTitleHolder.appendChild(whereFrom);
             }
             taskText.append(taskTitleHolder, taskDescription);
             taskInfo.classList.add('task-info');
             taskInfo.append(taskDate,taskIcon);
-            taskBox.append(taskText, taskInfo);
+            taskBox.append(taskFunctionals, taskText, taskInfo);
             projectTasks.appendChild(taskBox);
             
             const currentTask = {
+                taskName: taskTitle.textContent,
                 projectName : project,
                 taskIndex: i
             }
-
-            taskIcon.addEventListener('click', deleteTask);
-            taskTitle.addEventListener('click', () => { editTaskTitle(taskText, taskTitle, taskDescription, currentTask) });
-            taskDate.addEventListener('click', () => { editTaskDate(taskInfo, taskDate, taskIcon, currentTask) });
-            taskDescription.addEventListener('click', () => { editTaskDescription(taskText, taskDescription, taskTitle, currentTask) });
+            taskIcon.addEventListener('click', () => deleteTask(currentTask));
+            taskTitle.addEventListener('click', (e) => { editTaskTitle(e, taskText, taskTitleHolder, taskDescription, currentTask) });
+            taskDate.addEventListener('click', (e) => { editTaskDate(e, taskInfo, taskDate, taskIcon, currentTask) });
+            taskDescription.addEventListener('click', (e) => { editTaskDescription(e, taskText, taskDescription, taskTitleHolder, currentTask) });
+            taskCheckOff.addEventListener('click', () => {
+                taskTitle.removeEventListener('click', (e) => { editTaskTitle(e, taskText, taskTitleHolder, taskDescription, currentTask) });
+                taskTitle.style.textDecoration = 'line-through';
+                taskTitle.style.textDecorationColor = 'green';
+                taskTitle.style.textDecorationThickness = '2px';
+                taskDate.removeEventListener('click', (e) => { editTaskDate(e, taskInfo, taskDate, taskIcon, currentTask) });
+                const dateObj = new Date();
+                let month = dateObj.getUTCMonth() + 1;
+                let day = dateObj.getUTCDate();
+                let year = dateObj.getUTCFullYear();
+                let today = year + "-" + month + "-" + day;
+                taskDate.textContent = today;
+                taskDate.style.color = 'green';
+                taskDate.style.fontWeight = 'bold';
+                taskDescription.removeEventListener('click', (e) => { editTaskDescription(e, taskText, taskDescription, taskTitleHolder, currentTask) });
+                taskDescription.style.textDecoration = 'line-through';
+                taskDescription.style.textDecorationColor = 'green';
+                taskDescription.style.textDecorationThickness = '2px';
+            })
         }
     } 
 }

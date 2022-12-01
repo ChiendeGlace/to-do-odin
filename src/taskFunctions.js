@@ -35,7 +35,9 @@ const createTaskForm = () => {
 }
 
 const taskFactory = (title, description, date) => {
-    return { title, description, date };
+    let priority = false;
+    let completed = false;
+    return { title, description, date, priority, completed };
 };
 
 
@@ -52,78 +54,169 @@ const createTask = (e) => {
     hideForm()
 };
 
-export const deleteTask = (e) => {
-    const currentTaskName = e.target.parentNode.parentNode.firstChild.firstChild;
-    const project = JSON.parse(localStorage.getItem(currentProject));
-    for (let i = 0; i < project.length; i++) {
-        if (currentTaskName.textContent == project[i].title) {
-            project.splice(i, 1);
+export const deleteTask = (currentTask) => {
+        let whatProject;
+        let realProject;
+        let currentTaskName = currentTask.taskName;
+        const project = JSON.parse(localStorage.getItem(currentProject));
+        if (currentProject == 'Inbox') {
+            whatProject = project[currentTask.taskIndex].whereFrom; 
+            realProject = JSON.parse(localStorage.getItem(whatProject));
+            for (let i = 0; i < realProject.length; i++) {
+                if (currentTaskName == realProject[i].title) {
+                    realProject.splice(i, 1);
+                }
+            }
+            localStorage.setItem(`${whatProject}`, JSON.stringify(realProject));
         }
-    }
-    localStorage.setItem(`${currentProject}`, JSON.stringify(project));
-    projectTasks.textContent = '';
-    section.textContent = '';
-    section.appendChild(makeSidebar());
-    section.appendChild(makeHomepage(currentProject));
+        if (currentProject !== 'Inbox') {
+            const inboxProject = JSON.parse(localStorage.getItem('Inbox'));
+            for (let i = 0; i < inboxProject.length; i++) {
+                if (currentTaskName == inboxProject[i].title) {
+                    inboxProject.splice(i, 1);
+                }
+            }
+            localStorage.setItem('Inbox', JSON.stringify(inboxProject));
+        }
+        for (let i = 0; i < project.length; i++) {
+            if (currentTaskName == project[i].title) {
+                project.splice(i, 1);
+            }
+        }
+        localStorage.setItem(`${currentProject}`, JSON.stringify(project));
+        projectTasks.textContent = '';
+        section.textContent = '';
+        section.appendChild(makeSidebar());
+        section.appendChild(makeHomepage(currentProject));      
 };
 
-export const editTaskDate = (parentNode, dateNode, iconNode, currentTask) => {
+export const editTaskDate = (event, parentNode, dateNode, iconNode, currentTask) => {
+    let whatProject;
+    let realProject;
     const project = JSON.parse(localStorage.getItem(currentProject));
     parentNode.textContent = '';
     parentNode.append(taskDueDate, iconNode);
     taskDueDate.addEventListener('change', () => {
         project[currentTask.taskIndex].date = taskDueDate.value;
+        if (currentProject == 'Inbox') {
+            whatProject = project[currentTask.taskIndex].whereFrom;
+            realProject = JSON.parse(localStorage.getItem(whatProject));
+            for (let i = 0; i < realProject.length; i++) {
+                if (currentTask.taskName == realProject[i].title) {
+                    realProject[i].date = taskDueDate.value;
+                }
+            }
+            localStorage.setItem(`${whatProject}`, JSON.stringify(realProject));
+        }
+        if (currentProject !== 'Inbox') {
+            const inboxProject = JSON.parse(localStorage.getItem('Inbox'));
+            for (let i = 0; i < inboxProject.length; i++) {
+                if (currentTask.taskName == inboxProject[i].title) {
+                    inboxProject[i].date = taskDueDate.value;
+                }
+            }
+            localStorage.setItem('Inbox', JSON.stringify(inboxProject));
+        }
         localStorage.setItem(`${currentProject}`, JSON.stringify(project));
         projectTasks.textContent = '';
         section.textContent = '';
         section.appendChild(makeSidebar());
         section.appendChild(makeHomepage(currentProject));
     });
-    taskDueDate.addEventListener('mouseout', () => {
-        setTimeout(() => {
-            parentNode.textContent = '';
-            parentNode.append(dateNode, iconNode);
-          }, "250");
+
+    document.addEventListener('click', (e) => {
+        if (e.target !== event.target && e.target !== taskDueDate) {
+            setTimeout(() => {
+                parentNode.textContent = '';
+                parentNode.append(dateNode, iconNode);
+              }, "250");
+        }
     })
 };
 
-export const editTaskTitle = (parentNode, taskTitle, taskDescription, currentTask) => {
+export const editTaskTitle = (event, parentNode, taskTitle, taskDescription, currentTask) => {
+    let whatProject;
+    let realProject;
     const project = JSON.parse(localStorage.getItem(currentProject));
     parentNode.textContent = '';
     parentNode.append(taskFormTitle, taskDescription);
     taskFormTitle.addEventListener('change', () => {
         project[currentTask.taskIndex].title = taskFormTitle.value;
+        if (currentProject == 'Inbox') {
+            whatProject = project[currentTask.taskIndex].whereFrom;
+            realProject = JSON.parse(localStorage.getItem(whatProject));
+            for (let i = 0; i < realProject.length; i++) {
+                if (currentTask.taskName == realProject[i].title) {
+                    realProject[i].title = taskFormTitle.value;
+                }
+            }
+            localStorage.setItem(`${whatProject}`, JSON.stringify(realProject));
+        }
+        if (currentProject !== 'Inbox') {
+            const inboxProject = JSON.parse(localStorage.getItem('Inbox'));
+            for (let i = 0; i < inboxProject.length; i++) {
+                if (currentTask.taskName == inboxProject[i].title) {
+                    inboxProject[i].title = taskFormTitle.value;
+                }
+            }
+            localStorage.setItem('Inbox', JSON.stringify(inboxProject));
+        }
         localStorage.setItem(`${currentProject}`, JSON.stringify(project));
         projectTasks.textContent = '';
         section.textContent = '';
         section.appendChild(makeSidebar());
         section.appendChild(makeHomepage(currentProject));
     });
-    taskFormTitle.addEventListener('mouseout', () => {
-        setTimeout(() => {
-            parentNode.textContent = '';
-            parentNode.append(taskTitle, taskDescription);
-          }, "250");
+    document.addEventListener('click', (e) => {
+        if (e.target !== event.target && e.target !== taskFormTitle) {
+            setTimeout(() => {
+                parentNode.textContent = '';
+                parentNode.append(taskTitle, taskDescription);
+              }, "250");
+        }
     })
 };
 
-export const editTaskDescription = (parentNode, taskDescription, taskTitle, currentTask) => {
+export const editTaskDescription = (event, parentNode, taskDescription, taskTitle, currentTask) => {
+    let whatProject;
+    let realProject;
     const project = JSON.parse(localStorage.getItem(currentProject));
     parentNode.textContent = '';
     parentNode.append(taskTitle, taskFormDescription);
     taskFormDescription.addEventListener('change', () => {
         project[currentTask.taskIndex].description = taskFormDescription.value;
+        if (currentProject == 'Inbox') {
+            whatProject = project[currentTask.taskIndex].whereFrom;
+            realProject = JSON.parse(localStorage.getItem(whatProject));
+            for (let i = 0; i < realProject.length; i++) {
+                if (currentTask.taskName == realProject[i].title) {
+                    realProject[i].description = taskFormDescription.value;
+                }
+            }
+            localStorage.setItem(`${whatProject}`, JSON.stringify(realProject));
+        }
+        if (currentProject !== 'Inbox') {
+            const inboxProject = JSON.parse(localStorage.getItem('Inbox'));
+            for (let i = 0; i < inboxProject.length; i++) {
+                if (currentTask.taskName == inboxProject[i].title) {
+                    inboxProject[i].description = taskFormDescription.value;
+                }
+            }
+            localStorage.setItem('Inbox', JSON.stringify(inboxProject));
+        }
         localStorage.setItem(`${currentProject}`, JSON.stringify(project));
         projectTasks.textContent = '';
         section.textContent = '';
         section.appendChild(makeSidebar());
         section.appendChild(makeHomepage(currentProject));
     });
-    taskFormDescription.addEventListener('mouseout', () => {
-        setTimeout(() => {
-            parentNode.textContent = '';
-            parentNode.append(taskTitle, taskDescription);
-          }, "250");
+    document.addEventListener('click', (e) => {
+        if (e.target !== event.target && e.target !== taskFormDescription) {
+            setTimeout(() => {
+                parentNode.textContent = '';
+                parentNode.append(taskTitle, taskDescription);
+              }, "250");
+        }
     })
 };
 

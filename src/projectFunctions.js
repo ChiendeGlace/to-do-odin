@@ -22,9 +22,10 @@ export const createProject = (name) => {
 
 
 const projectForm = document.createElement('form');
+projectForm.classList.add('project-form');
 export const projectFormInput = document.createElement('input');
 projectFormInput.minLength = '3';
-projectFormInput.placeholder = 'Enter Project Name';
+projectFormInput.placeholder = 'Project Name';
 projectFormInput.required = 'true';
 const projectButtonDiv = document.createElement('div');
 const submitButton = document.createElement('button');
@@ -93,8 +94,10 @@ export const renderSidebarProjects = () => {
             sidebarProjectIcon.classList.add('fa-solid');
             sidebarProjectIcon.classList.add('fa-folder');
             const sidebarProjectTitle = document.createElement('p');
+            sidebarProjectTitle.style.cursor = 'pointer';
             sidebarProjectTitle.textContent = sidebarProjects[i];
             const sidebarProjectMenu = document.createElement('i');
+            sidebarProjectMenu.style.cursor = 'pointer';
             sidebarProjectMenu.classList.add('fa-solid');
             sidebarProjectMenu.classList.add('fa-xmark');
             sidebarProjectBox.append(sidebarProjectIcon, sidebarProjectTitle, sidebarProjectMenu);
@@ -117,13 +120,19 @@ const appendProject = (e) => {
     hideForm();
 }
 
+export const projectTitleForm = document.createElement('input');
+projectTitleForm.classList.add('blue-one');
+projectTitleForm.minLength = '3';
+projectTitleForm.placeholder = 'Project Name';
+projectTitleForm.required = 'true';
+
 export const changeTitle = (e) => {
     let index;
     let arrayIndex;
     const project = JSON.parse(localStorage.getItem(currentProject));
     const sidebarProjectList = JSON.parse(localStorage.getItem('Sidebar')) || [];
     projectTitleDiv.textContent = '';
-    projectTitleDiv.appendChild(projectFormInput);
+    projectTitleDiv.appendChild(projectTitleForm);
     for (let i = 0; i < localStorage.length; i++) {
         if (localStorage.key(i) == currentProject) {
             index = i;
@@ -134,21 +143,21 @@ export const changeTitle = (e) => {
             arrayIndex = i;
         }
     }
-    projectFormInput.addEventListener('change', () => {
-        if (projectFormInput.value.length >= 3) {
-            localStorage.setItem(`${projectFormInput.value}`, JSON.stringify(project));
+    projectTitleForm.addEventListener('change', () => {
+        if (projectTitleForm.value.length >= 3) {
+            localStorage.setItem(`${projectTitleForm.value}`, JSON.stringify(project));
             localStorage.removeItem(currentProject);
-            sidebarProjectList[arrayIndex] = projectFormInput.value;
+            sidebarProjectList[arrayIndex] = projectTitleForm.value;
             localStorage.setItem('Sidebar', JSON.stringify(sidebarProjectList));
             sidebarCreatedProjects.textContent = '';
             renderSidebarProjects();
-            currentProject = projectFormInput.value;
+            currentProject = projectTitleForm.value;
             projectTitleDiv.textContent = '';
-            projectTitle.textContent = projectFormInput.value;
+            projectTitle.textContent = projectTitleForm.value;
             projectTitleDiv.appendChild(projectTitle);
         } 
     })
-    projectFormInput.addEventListener('mouseout', () => {
+    projectTitleForm.addEventListener('mouseout', () => {
         setTimeout(() => {
             projectTitleDiv.textContent = '';
             projectTitleDiv.appendChild(projectTitle);
