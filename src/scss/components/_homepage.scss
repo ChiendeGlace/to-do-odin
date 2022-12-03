@@ -77,3 +77,25 @@
 .blue-one {
     background-color: #bae6fd;
 }
+
+@media screen and (max-width: 700px) {
+    .task-box {
+        flex-direction: column;
+    }
+    .task-functionals {
+        flex-direction: row;
+        width: 100%;
+    }
+    .task-text {
+        width: 100%;
+        align-self: flex-start;
+    }
+    .task-info {
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .task-form {
+        width: 100%;
+    }
+}

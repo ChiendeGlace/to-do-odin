@@ -10,6 +10,7 @@ taskFormTitle.placeholder = 'Title: Shopping';
 taskFormTitle.required = 'true';
 const taskFormDescription = document.createElement('input');
 taskFormDescription.placeholder = 'Details: e.g. do shopping tomorrow 6pm';
+taskFormDescription.classList.add('task-form-description');
 taskFormDescription.required = 'true';
 const taskDueDate = document.createElement('input');
 taskDueDate.required = 'true';
@@ -219,6 +220,47 @@ export const editTaskDescription = (event, parentNode, taskDescription, taskTitl
         }
     })
 };
+
+export const changeTaskCompletion = (currentTask, projectName) => {
+    if (projectName == 'Inbox') {
+        let whatProject;
+        let realProject;
+        const inboxProject = JSON.parse(localStorage.getItem('Inbox'));
+        whatProject = inboxProject[currentTask.taskIndex].whereFrom;
+        realProject = JSON.parse(localStorage.getItem(whatProject));
+        if (inboxProject[currentTask.taskIndex].completed) {
+            inboxProject[currentTask.taskIndex].completed = false;
+        } else {
+            inboxProject[currentTask.taskIndex].completed = true; 
+        }
+        for (let i = 0; i < realProject.length; i++) {
+            if (realProject[i].completed) {
+                realProject[i].completed= false;
+            } else {
+                realProject[i].completed = true; 
+            }
+        }
+        localStorage.setItem('Inbox', JSON.stringify(inboxProject));
+        localStorage.setItem(`${whatProject}`, JSON.stringify(realProject));
+    } else {
+        const project = JSON.parse(localStorage.getItem(currentProject));
+        const inboxProject = JSON.parse(localStorage.getItem('Inbox'));
+        if (project[currentTask.taskIndex].completed) {
+            project[currentTask.taskIndex].completed = false;
+        } else {
+            project[currentTask.taskIndex].completed = true; 
+        }
+        for (let i = 0; i < inboxProject.length; i++) {
+            if (inboxProject[i].completed) {
+                inboxProject[i].completed= false;
+            } else {
+                inboxProject[i].completed = true; 
+            }
+        }
+        localStorage.setItem(`${currentProject}`, JSON.stringify(project));
+        localStorage.setItem('Inbox', JSON.stringify(inboxProject));
+    }
+}
 
 taskForm.addEventListener('submit', createTask);
 

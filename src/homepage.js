@@ -1,5 +1,5 @@
 import { createProject, changeTitle } from "./projectFunctions";
-import { makeTaskForm, cancelButton, deleteTask, editTaskDate, editTaskTitle, editTaskDescription, taskForm} from "./taskFunctions";
+import { makeTaskForm, cancelButton, deleteTask, editTaskDate, editTaskTitle, editTaskDescription, taskForm, changeTaskCompletion} from "./taskFunctions";
 
 export let currentProject; 
 
@@ -71,6 +71,7 @@ const renderTasks = (project, projectName) => {
             taskInfo.classList.add('task-info');
             taskInfo.append(taskDate,taskIcon);
             taskBox.append(taskFunctionals, taskText, taskInfo);
+            taskIcon.style.cursor = 'pointer';
             projectTasks.appendChild(taskBox);
             
             const currentTask = {
@@ -82,25 +83,7 @@ const renderTasks = (project, projectName) => {
             taskTitle.addEventListener('click', (e) => { editTaskTitle(e, taskText, taskTitleHolder, taskDescription, currentTask) });
             taskDate.addEventListener('click', (e) => { editTaskDate(e, taskInfo, taskDate, taskIcon, currentTask) });
             taskDescription.addEventListener('click', (e) => { editTaskDescription(e, taskText, taskDescription, taskTitleHolder, currentTask) });
-            taskCheckOff.addEventListener('click', () => {
-                taskTitle.removeEventListener('click', (e) => { editTaskTitle(e, taskText, taskTitleHolder, taskDescription, currentTask) });
-                taskTitle.style.textDecoration = 'line-through';
-                taskTitle.style.textDecorationColor = 'green';
-                taskTitle.style.textDecorationThickness = '2px';
-                taskDate.removeEventListener('click', (e) => { editTaskDate(e, taskInfo, taskDate, taskIcon, currentTask) });
-                const dateObj = new Date();
-                let month = dateObj.getUTCMonth() + 1;
-                let day = dateObj.getUTCDate();
-                let year = dateObj.getUTCFullYear();
-                let today = year + "-" + month + "-" + day;
-                taskDate.textContent = today;
-                taskDate.style.color = 'green';
-                taskDate.style.fontWeight = 'bold';
-                taskDescription.removeEventListener('click', (e) => { editTaskDescription(e, taskText, taskDescription, taskTitleHolder, currentTask) });
-                taskDescription.style.textDecoration = 'line-through';
-                taskDescription.style.textDecorationColor = 'green';
-                taskDescription.style.textDecorationThickness = '2px';
-            })
+            taskCheckOff.addEventListener('click', () => { changeTaskCompletion(currentTask, projectName)});
         }
     } 
 }
@@ -130,6 +113,7 @@ const renderProject = (projectName) => {
         projectTitle.removeEventListener('click', changeTitle);
     } else {
         projectTitle.addEventListener('click', changeTitle);
+        projectTitle.style.cursor = 'pointer';
     }
     taskAdder.addEventListener('click', makeTaskForm);
     renderTasks(project, projectName);

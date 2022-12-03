@@ -40,12 +40,12 @@ section {
     grid-template-columns: 2fr 9fr;
 }
 
+.homepage-only {
+    grid-template-columns: 1fr;
+}
+
 @media screen and (max-width: 1000px) {
     section {
         grid-template-columns: 1fr;
     }
-}
-
-.homepage-only {
-    grid-template-columns: 1fr;
 }
