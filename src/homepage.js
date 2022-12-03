@@ -1,5 +1,6 @@
 import { createProject, changeTitle } from "./projectFunctions";
-import { makeTaskForm, cancelButton, deleteTask, editTaskDate, editTaskTitle, editTaskDescription, taskForm, changeTaskCompletion} from "./taskFunctions";
+import { makeTaskForm, cancelButton, deleteTask, editTaskDate, editTaskTitle, editTaskDescription, taskForm} from "./taskFunctions";
+import { displayCompletion, displayNotCompleted, changeTaskCompletion, changeTaskPriority, displayNotPrioritized, displayPriority} from "./taskFunctions2";
 
 export let currentProject; 
 
@@ -84,6 +85,18 @@ const renderTasks = (project, projectName) => {
             taskDate.addEventListener('click', (e) => { editTaskDate(e, taskInfo, taskDate, taskIcon, currentTask) });
             taskDescription.addEventListener('click', (e) => { editTaskDescription(e, taskText, taskDescription, taskTitleHolder, currentTask) });
             taskCheckOff.addEventListener('click', () => { changeTaskCompletion(currentTask, projectName)});
+            taskPriority.addEventListener('click', () => { changeTaskPriority(currentTask, projectName)});
+
+            if (project[i].completed == true) {
+                displayCompletion(taskDate, taskTitle, taskDescription, taskCheckOff)
+            } else {
+                displayNotCompleted(taskDate, taskTitle, taskDescription, taskCheckOff)
+            }
+            if (project[i].priority == true) {
+                displayPriority(taskPriority, taskTitle, taskDescription);
+            } else {
+                displayNotPrioritized(taskPriority, taskTitle, taskDescription);
+            }
         }
     } 
 }
