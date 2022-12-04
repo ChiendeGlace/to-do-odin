@@ -3,7 +3,8 @@ import { currentProject, projectBody, hideForm, projectTasks, makeHomepage } fro
 import { makeSidebar } from "./sidebar";
 
 export const taskForm = document.createElement('form');
-taskForm.classList.add('task-form')
+taskForm.classList.add('light-mode-white');
+taskForm.setAttribute("id", "task-form");
 const taskFormTitle = document.createElement('input');
 taskFormTitle.minLength = '5';
 taskFormTitle.placeholder = 'Title: Shopping';
@@ -48,6 +49,13 @@ export const makeTaskForm = (e) => {
 const createTask = (e) => {
     e.preventDefault();
     const project = JSON.parse(localStorage.getItem(currentProject));
+    for (let i = 0; i < project.length; i++) {
+        if (project[i].name = taskFormTitle.value) {
+            alert("Task names cannot repeat! Please change it.");
+            hideForm()
+            return 
+        } 
+    }
     const newTask = taskFactory(taskFormTitle.value, taskFormDescription.value, taskDueDate.value);
     project.push(newTask);
     localStorage.setItem(`${currentProject}`, JSON.stringify(project));
@@ -73,7 +81,7 @@ export const deleteTask = (currentTask) => {
         if (currentProject !== 'Inbox') {
             const inboxProject = JSON.parse(localStorage.getItem('Inbox'));
             for (let i = 0; i < inboxProject.length; i++) {
-                if (currentTaskName == inboxProject[i].title) {
+                if (currentTaskName == inboxProject[i].title && inboxProject[i].whereFrom == currentProject) {
                     inboxProject.splice(i, 1);
                 }
             }
@@ -112,7 +120,7 @@ export const editTaskDate = (event, parentNode, dateNode, iconNode, currentTask)
         if (currentProject !== 'Inbox') {
             const inboxProject = JSON.parse(localStorage.getItem('Inbox'));
             for (let i = 0; i < inboxProject.length; i++) {
-                if (currentTask.taskName == inboxProject[i].title) {
+                if (currentTask.taskName == inboxProject[i].title && inboxProject[i].whereFrom == currentProject) {
                     inboxProject[i].date = taskDueDate.value;
                 }
             }
@@ -156,7 +164,7 @@ export const editTaskTitle = (event, parentNode, taskTitle, taskDescription, cur
         if (currentProject !== 'Inbox') {
             const inboxProject = JSON.parse(localStorage.getItem('Inbox'));
             for (let i = 0; i < inboxProject.length; i++) {
-                if (currentTask.taskName == inboxProject[i].title) {
+                if (currentTask.taskName == inboxProject[i].title && inboxProject[i].whereFrom == currentProject) {
                     inboxProject[i].title = taskFormTitle.value;
                 }
             }
@@ -199,7 +207,7 @@ export const editTaskDescription = (event, parentNode, taskDescription, taskTitl
         if (currentProject !== 'Inbox') {
             const inboxProject = JSON.parse(localStorage.getItem('Inbox'));
             for (let i = 0; i < inboxProject.length; i++) {
-                if (currentTask.taskName == inboxProject[i].title) {
+                if (currentTask.taskName == inboxProject[i].title && inboxProject[i].whereFrom == currentProject) {
                     inboxProject[i].description = taskFormDescription.value;
                 }
             }

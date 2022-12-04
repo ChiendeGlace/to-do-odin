@@ -22,7 +22,8 @@ export const createProject = (name) => {
 
 
 const projectForm = document.createElement('form');
-projectForm.classList.add('project-form');
+projectForm.classList.add('light-mode-white');
+projectForm.setAttribute("id", "project-form");
 export const projectFormInput = document.createElement('input');
 projectFormInput.minLength = '3';
 projectFormInput.placeholder = 'Project Name';

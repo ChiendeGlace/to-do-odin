@@ -1,8 +1,10 @@
 import { currentProject, makeHomepage, projectTasks } from "./homepage";
 import { renderSidebarProjects } from "./projectFunctions";
 
-const sidebar = document.createElement('div');
-sidebar.classList.add('sidebar');
+export const sidebar = document.createElement('div');
+sidebar.setAttribute("id", "sidebar");
+sidebar.classList.add('light-mode1');
+
 
 const sidebarDefault = document.createElement('div');
 sidebarDefault.classList.add('sidebar-default');

@@ -14,8 +14,7 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            .task-box {
-                background-color: white;
+            #task-box {
                 .task-text {
                     width: 80%;
                     display: flex;
@@ -53,7 +52,7 @@
     }
 }
 
-.task-form {
+#task-form {
     padding: 1em;
     border-radius: 5px;
     background-color: white;
@@ -79,7 +78,7 @@
 }
 
 @media screen and (max-width: 700px) {
-    .task-box {
+    #task-box {
         flex-direction: column;
     }
     .task-functionals {

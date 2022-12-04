@@ -60,7 +60,7 @@ export const changeTaskCompletion = (currentTask, projectName) => {
             project[currentTask.taskIndex].completed = true; 
         }
         for (let i = 0; i < inboxProject.length; i++) {
-            if (currentTask.taskName == inboxProject[i].title) {
+            if (currentTask.taskName == inboxProject[i].title && inboxProject[i].whereFrom == currentProject) {
                 if (inboxProject[i].completed == true) {
                     inboxProject[i].completed = false;
                 } else {
@@ -104,24 +104,32 @@ export const changeTaskPriority = ( currentTask, projectName) => {
         realProject = JSON.parse(localStorage.getItem(whatProject));
         if (inboxProject[currentTask.taskIndex].priority) {
             inboxProject[currentTask.taskIndex].priority = false;
+            inboxProject.splice(currentTask.taskIndex, 1);
+            inboxProject.push(taskCopy);
+            localStorage.setItem('Inbox', JSON.stringify(inboxProject));
         } else {
             inboxProject[currentTask.taskIndex].priority = true; 
+            inboxProject.splice(currentTask.taskIndex, 1);
+            inboxProject.unshift(taskCopy);
+            localStorage.setItem('Inbox', JSON.stringify(inboxProject));
         }
+        let realIndex;
         for (let i = 0; i < realProject.length; i++) {
             if (realProject[i].title == currentTask.taskName) {
-                if (realProject[i].priority == true) {
-                    realProject[i].priority = false;
-                    realProject.splice(i, 1);
-                    realProject.push(taskCopy);
-                } else {
-                    realProject[i].priority = true; 
-                    realProject.splice(i, 1);
-                    realProject.unshift(taskCopy);
-                }  
+                realIndex = i
             }
         }
-        localStorage.setItem('Inbox', JSON.stringify(inboxProject));
-        localStorage.setItem(`${whatProject}`, JSON.stringify(realProject));
+        if (realProject[realIndex].priority == true) {
+            realProject[realIndex].priority = false;
+            realProject.splice(realIndex, 1);
+            realProject.push(taskCopy);
+            localStorage.setItem(`${whatProject}`, JSON.stringify(realProject));
+        } else {
+            realProject[realIndex].priority = true; 
+            realProject.splice(realIndex, 1);
+            realProject.unshift(taskCopy);
+            localStorage.setItem(`${whatProject}`, JSON.stringify(realProject));
+        }  
     } else {
         const project = JSON.parse(localStorage.getItem(currentProject));
         let taskCopy = project[currentTask.taskIndex];
@@ -130,24 +138,31 @@ export const changeTaskPriority = ( currentTask, projectName) => {
             project[currentTask.taskIndex].priority = false;
             project.splice(currentTask.taskIndex, 1);
             project.push(taskCopy);
+            localStorage.setItem(`${currentProject}`, JSON.stringify(project));
         } else {
             project[currentTask.taskIndex].priority = true; 
             project.splice(currentTask.taskIndex, 1);
             project.unshift(taskCopy);
+            localStorage.setItem(`${currentProject}`, JSON.stringify(project));
         }
+        let inboxIndex;
         for (let i = 0; i < inboxProject.length; i++) {
-            if (inboxProject[i].taskName == currentTask.taskName) {
-                if (inboxProject[i].priority == true) {
-                    inboxProject[i].priority = false;
-                } else {
-                    inboxProject[i].priority = true; 
-                }    
+            if (inboxProject[i].title == currentTask.taskName && inboxProject[i].whereFrom == currentProject) { 
+                inboxIndex = i;
             }
         }
-        localStorage.setItem(`${currentProject}`, JSON.stringify(project));
-        localStorage.setItem('Inbox', JSON.stringify(inboxProject));
-
-    }
+        if (inboxProject[inboxIndex].priority == true) {
+            inboxProject[inboxIndex].priority = false;
+            inboxProject.splice(inboxIndex, 1);
+            inboxProject.push(taskCopy);
+            localStorage.setItem('Inbox', JSON.stringify(inboxProject));
+        } else {
+            inboxProject[inboxIndex].priority = true; 
+            inboxProject.splice(inboxIndex, 1);
+            inboxProject.unshift(taskCopy);
+            localStorage.setItem('Inbox', JSON.stringify(inboxProject));
+        }
+    }  
     projectTasks.textContent = '';
     section.textContent = '';
     section.appendChild(makeSidebar());

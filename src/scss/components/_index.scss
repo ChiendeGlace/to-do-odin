@@ -25,12 +25,11 @@ button {
     font-weight: 500;
 }
 
-.container {
+#container {
     min-height: 100vh;
     display: grid;
     grid-template-columns: 1fr 6fr;
     grid-template-rows: 75px auto 50px;
-    background-color: #bae6fd;
 }
 
 section {
@@ -48,4 +47,26 @@ section {
     section {
         grid-template-columns: 1fr;
     }
+}
+
+.light-mode1 {
+    background-color: #bae6fd;
+}
+
+.light-mode2 {
+    background-color: #FCFCD4;
+}
+
+.dark-mode1 {
+    background-color: #075985;
+}
+.dark-mode2 {
+    background-color: #8B7356;
+}
+.light-mode-white {
+    background-color: white;
+}
+
+.dark-mode-white {
+    background-color: #d1d5db;
 }

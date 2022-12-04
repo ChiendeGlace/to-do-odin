@@ -32,7 +32,8 @@ const renderTasks = (project, projectName) => {
     if (!project == []) {
         for (let i = 0; i < project.length; i++) {
             const taskBox = document.createElement('div');
-            taskBox.classList.add('task-box');
+            taskBox.setAttribute("id", "task-box");
+            taskBox.classList.add('light-mode-white');
             const taskTitle = document.createElement('p');
             taskTitle.classList.add('task-title');
             const taskIcon = document.createElement('i');
@@ -80,17 +81,30 @@ const renderTasks = (project, projectName) => {
                 projectName : project,
                 taskIndex: i
             }
+            const changeTaskTitle = (e) => {editTaskTitle(e, taskText, taskTitleHolder, taskDescription, currentTask)};
+            const changeTaskDate = (e) => {editTaskDate(e, taskInfo, taskDate, taskIcon, currentTask)};
+            const changeTaskDescription = (e) => {editTaskDescription(e, taskText, taskDescription, taskTitleHolder, currentTask)};
+            const editTaskPriority = (e) => {changeTaskPriority(currentTask, projectName)}
+
             taskIcon.addEventListener('click', () => deleteTask(currentTask));
-            taskTitle.addEventListener('click', (e) => { editTaskTitle(e, taskText, taskTitleHolder, taskDescription, currentTask) });
-            taskDate.addEventListener('click', (e) => { editTaskDate(e, taskInfo, taskDate, taskIcon, currentTask) });
-            taskDescription.addEventListener('click', (e) => { editTaskDescription(e, taskText, taskDescription, taskTitleHolder, currentTask) });
+            taskTitle.addEventListener('click', changeTaskTitle);
+            taskDate.addEventListener('click', changeTaskDate);
+            taskDescription.addEventListener('click', changeTaskDescription);
             taskCheckOff.addEventListener('click', () => { changeTaskCompletion(currentTask, projectName)});
-            taskPriority.addEventListener('click', () => { changeTaskPriority(currentTask, projectName)});
+            taskPriority.addEventListener('click', editTaskPriority);
 
             if (project[i].completed == true) {
-                displayCompletion(taskDate, taskTitle, taskDescription, taskCheckOff)
+                displayCompletion(taskDate, taskTitle, taskDescription, taskCheckOff);
+                taskPriority.removeEventListener('click', editTaskPriority);
+                taskTitle.removeEventListener('click', changeTaskTitle);
+                taskDate.removeEventListener('click', changeTaskDate);
+                taskDescription.removeEventListener('click', changeTaskDescription);
             } else {
-                displayNotCompleted(taskDate, taskTitle, taskDescription, taskCheckOff)
+                displayNotCompleted(taskDate, taskTitle, taskDescription, taskCheckOff);
+                taskPriority.addEventListener('click', editTaskPriority);
+                taskTitle.addEventListener('click', changeTaskTitle);
+                taskDate.addEventListener('click', changeTaskDate);
+                taskDescription.addEventListener('click', changeTaskDescription);
             }
             if (project[i].priority == true) {
                 displayPriority(taskPriority, taskTitle, taskDescription);
@@ -120,6 +134,16 @@ const renderProject = (projectName) => {
             } 
             localStorage.setItem('Inbox', JSON.stringify(project));
         }
+        for (let i = 0; i < project.length; i++) {
+            if (project[i].priority == true) {
+                console.log('hi');
+                let taskCopy = project[i];
+                project.splice(i, 1);
+                project.unshift(taskCopy);
+                localStorage.setItem('Inbox', JSON.stringify(project));
+            }
+        }
+
     }
     projectTitle.textContent = projectName;
     if (projectName == 'Inbox' || projectName == 'Today' || projectName == 'This week') {
