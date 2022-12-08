@@ -42,6 +42,17 @@
         }
     }
 }
+
+.warning {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    div {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+}
 #project-form {
     background-color: white;
     padding: 1em;
@@ -55,6 +66,12 @@
         flex-direction: column;
         gap: 16px;
     }
+}
+
+.sidebar-created-projects {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 

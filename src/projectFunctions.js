@@ -1,6 +1,7 @@
 import { section } from './index';
 import { makeHomepage, projectTasks, projectTitle, projectTitleDiv, currentProject } from './homepage.js';
 import { makeSidebar, sidebarForm, sidebarProjectsAdder, sidebarCreatedProjects } from "./sidebar";
+import { taskFormTitle, taskDueDate, taskFormDescription} from './taskFunctions';
 
 export const changeProject = (e) => {
     const projectName = e.target.textContent;
@@ -12,6 +13,7 @@ export const changeProject = (e) => {
     renderSidebarProjects();
 }
 
+sidebarCreatedProjects.classList.add('sidebar-created-projects');
 
 export const createProject = (name) => {
     const projectName = name;
@@ -29,7 +31,7 @@ projectFormInput.minLength = '3';
 projectFormInput.placeholder = 'Project Name';
 projectFormInput.required = 'true';
 const projectButtonDiv = document.createElement('div');
-const submitButton = document.createElement('button');
+export const submitButton = document.createElement('button');
 submitButton.type = 'submit';
 submitButton.textContent = 'Submit';
 export const cancelButton = document.createElement('button');
@@ -41,6 +43,7 @@ const hideForm = (e) => {
 }
 
 const createProjectForm = () => {
+    projectFormInput.value = '';
     projectForm.append(projectFormInput, projectButtonDiv)
     return projectForm;
 }
@@ -50,19 +53,24 @@ export const makeProjectForm = (e) => {
 }
 
 const warning = document.createElement('div');
+warning.classList.add('warning');
 const warningMessage = document.createElement('p');
 warningMessage.textContent = 'Are you sure you want to delete the project?';
-const projectCancelButton = document.createElement('button');
+export const projectCancelButton = document.createElement('button');
 projectCancelButton.textContent = 'No';
-const acceptButton = document.createElement('button');
+export const acceptButton = document.createElement('button');
 acceptButton.textContent = 'Yes';
 const buttonDiv = document.createElement('div');
 buttonDiv.append(acceptButton, projectCancelButton);
 warning.append(warningMessage, buttonDiv);
 
+let projectToDelete
+
 const makeProjectWarning = (projectBox, projectIcon, projectTitle, projectMenu) => {
-    projectBox.textContent = '';
-    projectBox.appendChild(warning);
+    warningMessage.textContent = `Are you sure you want to delete ${projectTitle.textContent} project?`;
+    projectToDelete = projectTitle.textContent;
+    sidebarCreatedProjects.textContent = ''
+    sidebarCreatedProjects.appendChild(warning);
 }
 
 const hideWarning = (e) => {
@@ -70,7 +78,8 @@ const hideWarning = (e) => {
     renderSidebarProjects();
 };
 
-const deleteProject = (projectName) => {
+const deleteProject = (e) => {
+    let projectName = projectToDelete;
     let arrayIndex;
     const sidebarProjects = JSON.parse(localStorage.getItem('Sidebar')) || [];
     for (let i = 0; i < sidebarProjects.length; i++) {
@@ -78,14 +87,15 @@ const deleteProject = (projectName) => {
             arrayIndex = i;
         }
     }
+    sidebarCreatedProjects.textContent = '';
     sidebarProjects.splice(arrayIndex, 1);
     localStorage.setItem('Sidebar', JSON.stringify(sidebarProjects));
     localStorage.removeItem(`${projectName}`);
-    sidebarCreatedProjects.textContent = '';
     renderSidebarProjects();
 };
 
 export const renderSidebarProjects = () => {
+    sidebarCreatedProjects.textContent = '';
     const sidebarProjects = JSON.parse(localStorage.getItem('Sidebar')) || [];
     if (sidebarProjects.length > 0) {
         for (let i = 0; i < sidebarProjects.length; i++) {
@@ -105,8 +115,8 @@ export const renderSidebarProjects = () => {
             sidebarCreatedProjects.appendChild(sidebarProjectBox);
             sidebarProjectTitle.addEventListener('click', changeProject);
             sidebarProjectMenu.addEventListener('click', () => makeProjectWarning(sidebarProjectBox, sidebarProjectIcon, sidebarProjectTitle, sidebarProjectMenu));
-            acceptButton.addEventListener('click', () => deleteProject(sidebarProjectTitle.textContent));
         }
+        acceptButton.addEventListener('click', deleteProject);
     }
 }
 
@@ -144,6 +154,7 @@ export const changeTitle = (e) => {
             arrayIndex = i;
         }
     }
+    
     projectTitleForm.addEventListener('change', () => {
         if (projectTitleForm.value.length >= 3) {
             localStorage.setItem(`${projectTitleForm.value}`, JSON.stringify(project));

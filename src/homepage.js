@@ -81,9 +81,9 @@ const renderTasks = (project, projectName) => {
                 projectName : project,
                 taskIndex: i
             }
-            const changeTaskTitle = (e) => {editTaskTitle(e, taskText, taskTitleHolder, taskDescription, currentTask)};
-            const changeTaskDate = (e) => {editTaskDate(e, taskInfo, taskDate, taskIcon, currentTask)};
-            const changeTaskDescription = (e) => {editTaskDescription(e, taskText, taskDescription, taskTitleHolder, currentTask)};
+            const changeTaskTitle = (e) => {editTaskTitle(e, taskText, taskTitleHolder, taskDescription, currentTask, taskDate, changeTaskDescription, changeTaskDate)};
+            const changeTaskDate = (e) => {editTaskDate(e, taskInfo, taskDate, taskIcon, currentTask, taskTitle, taskDescription, changeTaskTitle, changeTaskDescription)};
+            const changeTaskDescription = (e) => {editTaskDescription(e, taskText, taskDescription, taskTitleHolder, currentTask, taskTitle, taskDate, changeTaskTitle, changeTaskDate)};
             const editTaskPriority = (e) => {changeTaskPriority(currentTask, projectName)}
 
             taskIcon.addEventListener('click', () => deleteTask(currentTask));
